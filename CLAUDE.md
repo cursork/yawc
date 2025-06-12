@@ -22,6 +22,16 @@ The application follows a global state architecture with four main components:
 - **yawc.W (WebSocket)**: Handles EWC server communication (WC/WS/WG/EX/NQ messages)
 - **yawc.Q (Queues)**: Message queuing system for handling async server interactions
 
+### Implementation Details
+
+**Tree (src/tree.ts)**: Component hierarchy using dot notation for parent-child relationships (e.g., 'F1.SF' has parent 'F1'). Provides create(), setProperty(), getProperty(), destroy(), and find() methods.
+
+**Renderer (src/renderer.ts)**: Snabbdom-based rendering that finds the Form component among roots and renders it. Component-specific renderers in src/components/ directory.
+
+**WebSocket (src/websocket.ts)**: Message handlers organized by type (onWC, onWS, onWG, onEX, onNQ). Messages are single key-value pairs like `{"WC": {...}}`.
+
+**Queue (src/queue.ts)**: Sequential processing of messages with optional callbacks. NQ messages require server response before continuing.
+
 ### State Management
 All state lives in a single global `yawc` variable (window.yawc in browser). The Tree structure represents Forms, SubForms, and components hierarchically with IDs, Types, Children, and Properties.
 

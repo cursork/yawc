@@ -33,6 +33,7 @@ function renderChild(component: YawcComponent): VNode {
   
   // Fallback for unknown components
   return h('div', {
+    attrs: { id: component.ID },
     style: { border: '1px solid red', padding: '5px', color: 'red' }
   }, `Unknown component: ${component.Type}`)
 }

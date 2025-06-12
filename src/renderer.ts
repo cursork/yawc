@@ -1,4 +1,4 @@
-import { init, h, classModule, propsModule, styleModule, eventListenersModule } from 'snabbdom'
+import { init, h, classModule, propsModule, styleModule, eventListenersModule, attributesModule } from 'snabbdom'
 import type { VNode } from 'snabbdom'
 import type { Renderer, YawcComponent } from './types'
 import { yawc } from './yawc'
@@ -14,6 +14,7 @@ export class SnabbdomRenderer implements Renderer {
     propsModule,
     styleModule,
     eventListenersModule,
+    attributesModule,
   ])
   
   private vnode: VNode | Element = document.getElementById('app')!
@@ -62,6 +63,7 @@ export class SnabbdomRenderer implements Renderer {
     if (!renderer) {
       // Unknown component type - render as div with error
       return h('div', { 
+        attrs: { id: component.ID },
         style: { 
           border: '1px solid red', 
           padding: '10px', 

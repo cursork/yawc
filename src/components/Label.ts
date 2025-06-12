@@ -5,8 +5,9 @@ import type { YawcComponent } from '../types'
 export function renderLabel(component: YawcComponent): VNode {
   const caption = component.Properties?.Caption || ''
   
-  return h('label', {
-    attrs: { id: component.ID },
+  console.error('ID', component);
+  return h('div', {
+    attrs: {id: component.ID},
     style: {
       display: 'block',
       margin: '5px 0',

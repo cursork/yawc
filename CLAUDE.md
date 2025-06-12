@@ -57,3 +57,4 @@ Key complexity: Some operations require server confirmation before UI updates (l
 - Avoid extraneous comments in code
 - Prefer terse function and variable names
 - Keep code concise and readable without verbose naming
+- Every component must include its ID in the rendered element using `attrs: { id: component.ID }`

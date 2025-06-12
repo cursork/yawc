@@ -51,3 +51,9 @@ Key complexity: Some operations require server confirmation before UI updates (l
 - Vite for bundling and dev server
 - Snabbdom for virtual DOM rendering
 - Native WebSocket for server communication
+
+## Code Style Preferences
+
+- Avoid extraneous comments in code
+- Prefer terse function and variable names
+- Keep code concise and readable without verbose naming

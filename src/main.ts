@@ -1,84 +1,42 @@
-import { init, h, classModule, propsModule, styleModule, eventListenersModule } from 'snabbdom'
-import type { VNode } from 'snabbdom'
+import { yawc } from './yawc'
 
-// Initialize snabbdom with modules
-const patch = init([
-  classModule,
-  propsModule,
-  styleModule,
-  eventListenersModule,
-])
-
-// Global application state
-interface AppState {
-  count: number
-  message: string
+// Example usage - create the structure from DESIGN.md
+function createExample() {
+  // Create Form
+  yawc.T.create('F1', 'Form')
+  
+  // Create SubForm inside Form
+  yawc.T.create('F1.SF', 'SubForm')
+  
+  // Create Label inside SubForm
+  yawc.T.create('F1.SF.L1', 'Label')
+  yawc.T.setProperty('F1.SF.L1', 'Caption', 'This is the text of the label')
+  
+  // Render the application
+  yawc.R.render()
 }
 
-let state: AppState = {
-  count: 0,
-  message: 'Hello, World!'
-}
+// Initialize the application
+createExample()
 
-// State update function
-function updateState(newState: Partial<AppState>) {
-  state = { ...state, ...newState }
-  render()
-}
+// Set up WebSocket message handlers (when connecting to EWC server)
+yawc.W.onWC((data) => {
+  // Handle WC (create) messages from server
+  console.log('WC message:', data)
+})
 
-// Component function
-function App(state: AppState): VNode {
-  return h('div', [
-    h('h1', { style: { color: '#333', fontFamily: 'sans-serif' } }, state.message),
-    h('p', `Count: ${state.count}`),
-    h('button', {
-      on: {
-        click: () => updateState({ count: state.count + 1 })
-      },
-      style: {
-        padding: '10px 20px',
-        margin: '10px',
-        backgroundColor: '#007acc',
-        color: 'white',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer'
-      }
-    }, 'Increment'),
-    h('button', {
-      on: {
-        click: () => updateState({ 
-          message: state.message === 'Hello, World!' ? 'Hello, TypeScript!' : 'Hello, World!'
-        })
-      },
-      style: {
-        padding: '10px 20px',
-        margin: '10px',
-        backgroundColor: '#28a745',
-        color: 'white',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer'
-      }
-    }, 'Toggle Message')
-  ])
-}
+yawc.W.onWS((data) => {
+  // Handle WS (set property) messages from server
+  console.log('WS message:', data)
+})
 
-// Render function
-let vnode: VNode | Element = document.getElementById('app')!
+yawc.W.onNQ((data) => {
+  // Handle NQ (enqueue) messages from server
+  console.log('NQ message:', data)
+  yawc.Q.handleNQResponse({ NQ: data })
+})
 
-function render() {
-  const newVnode = App(state)
-  vnode = patch(vnode, newVnode)
-}
+// Example of connecting to EWC server (commented out for demo)
+// yawc.W.connect('ws://localhost:8080')
 
-// Initial render
-render()
-
-// Hot module replacement (HMR) support
-if (import.meta.hot) {
-  import.meta.hot.accept(() => {
-    // Re-render without full page refresh
-    render()
-  })
-}
+console.log('yawc initialized. Check window.yawc for global access.')

@@ -1,6 +1,6 @@
 import type { QueueManager, EWCMessage, QueuedMessage } from './types'
 
-export class QueueManager implements QueueManager {
+export class Queue implements QueueManager {
   private queue: QueuedMessage[] = []
   private processing = false
   private timeoutMs = 5000 // 5 second timeout for responses
@@ -62,8 +62,7 @@ export class QueueManager implements QueueManager {
     yawc.W.send(message)
   }
 
-  // Handle incoming NQ responses
-  handleNQResponse(response: EWCMessage): void {
+  handleResponse(response: EWCMessage): void {
     const handler = (globalThis as any).__tempQueueHandler
     if (handler) {
       handler(response)

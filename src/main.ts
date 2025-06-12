@@ -31,9 +31,8 @@ yawc.W.onWS((data) => {
 })
 
 yawc.W.onNQ((data) => {
-  // Handle NQ (enqueue) messages from server
   console.log('NQ message:', data)
-  yawc.Q.handleNQResponse({ NQ: data })
+  yawc.Q.handleResponse({ NQ: data })
 })
 
 // Example of connecting to EWC server (commented out for demo)

@@ -1,6 +1,6 @@
 import type { WebSocketManager, EWCMessage } from './types'
 
-export class WebSocketManager implements WebSocketManager {
+export class WS implements WebSocketManager {
   private ws: WebSocket | null = null
   private messageHandlers: {
     WC?: (data: any) => void

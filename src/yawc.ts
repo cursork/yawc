@@ -1,15 +1,15 @@
 import { Tree } from './tree'
 import { SnabbdomRenderer } from './renderer'
-import { WebSocketManager } from './websocket'
-import { QueueManager } from './queue'
+import { WS } from './websocket'
+import { Queue } from './queue'
 import type { Yawc } from './types'
 
 // Global yawc instance
 export const yawc: Yawc = {
   T: new Tree(),
   R: new SnabbdomRenderer(),
-  W: new WebSocketManager(),
-  Q: new QueueManager()
+  W: new WS(),
+  Q: new Queue()
 }
 
 // Make yawc available globally in browser

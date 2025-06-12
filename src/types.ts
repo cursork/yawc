@@ -74,11 +74,7 @@ export interface WebSocketManager {
 
 export interface QueueManager {
   send(message: EWCMessage, callback?: (response: EWCMessage) => void): void
-  
-  // Handle incoming NQ responses
-  handleNQResponse(response: EWCMessage): void
-  
-  // Queue management
+  handleResponse(response: EWCMessage): void
   clear(): void
   getStatus(): { length: number, processing: boolean }
 }

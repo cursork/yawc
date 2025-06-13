@@ -10,12 +10,12 @@ export class Tree implements YawcTree {
   }
 
   // WC - Create component
-  create(id: string, type: string): void {
+  create(id: string, type: string, properties?: Record<string, any>): void {
     const component: YawcComponent = {
       ID: id,
       Type: type,
       Children: {},
-      Properties: {}
+      Properties: properties || {}
     }
 
     const parentId = this.getParentId(id)
@@ -31,18 +31,12 @@ export class Tree implements YawcTree {
     }
   }
 
-  // WS - Set property
-  setProperty(id: string, property: string, value: any): void {
+  // WS - Set properties
+  mergeProps(id: string, properties: Record<string, any>): void {
     const component = this.find(id)
     if (component && component.Properties) {
-      component.Properties[property] = value
+      component.Properties = { ...component.Properties, ...properties }
     }
-  }
-
-  // WG - Get property
-  getProperty(id: string, property: string): any {
-    const component = this.find(id)
-    return component?.Properties?.[property]
   }
 
   // EX - Expunge/destroy component

@@ -24,7 +24,7 @@ export function renderForm(component: YawcComponent): VNode {
 }
 
 function renderChild(component: YawcComponent): VNode {
-  // Import renderer dynamically to avoid circular imports
+  // Access renderer through global yawc
   const renderer = (yawc.R as any).componentRenderers?.[component.Type]
   
   if (renderer) {

@@ -10,7 +10,7 @@ function createExample() {
   
   // Create Label inside SubForm
   yawc.T.create('F1.SF.L1', 'Label')
-  yawc.T.setProperty('F1.SF.L1', 'Caption', 'This is the text of the label')
+  yawc.T.mergeProps('F1.SF.L1', { Caption: 'This is the text of the label' })
   
   // Render the application
   yawc.R.render()
@@ -21,13 +21,27 @@ createExample()
 
 // Set up WebSocket message handlers (when connecting to EWC server)
 yawc.W.onWC((data) => {
-  // Handle WC (create) messages from server
-  console.log('WC message:', data)
+  if (!data.Type) {
+    console.error('WC message missing Type:', data)
+    return
+  }
+  if (!data.ID) {
+    console.error('WC message missing ID:', data)
+    return
+  }
+  yawc.T.create(data.ID, data.Type, data.Properties)
+  yawc.R.render()
 })
 
 yawc.W.onWS((data) => {
-  // Handle WS (set property) messages from server
-  console.log('WS message:', data)
+  if (!data.ID) {
+    console.error('WS message missing ID:', data)
+    return
+  }
+  if (data.Properties) {
+    yawc.T.mergeProps(data.ID, data.Properties)
+  }
+  yawc.R.render()
 })
 
 yawc.W.onNQ((data) => {

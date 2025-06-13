@@ -43,7 +43,8 @@ export class SnabbdomRenderer implements Renderer {
     
     if (formComponent) {
       const formVNode = this.renderComponent(formComponent)
-      this.vnode = this.patch(this.vnode, formVNode)
+      const appVNode = h('div', { attrs: { id: 'app' } }, [formVNode])
+      this.vnode = this.patch(this.vnode, appVNode)
     } else {
       // No Form found - render empty div
       const emptyVNode = h('div', { attrs: { id: 'app' } }, 'No Form component found')

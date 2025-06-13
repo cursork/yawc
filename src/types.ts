@@ -10,13 +10,10 @@ export interface YawcTree {
   Roots: Record<string, YawcComponent>
   
   // WC - Create component
-  create(id: string, type: string): void
+  create(id: string, type: string, properties?: Record<string, any>): void
   
-  // WS - Set property
-  setProperty(id: string, property: string, value: any): void
-  
-  // WG - Get property
-  getProperty(id: string, property: string): any
+  // WS - Set properties
+  mergeProps(id: string, properties: Record<string, any>): void
   
   // EX - Expunge/destroy component
   destroy(id: string): void

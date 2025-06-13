@@ -48,6 +48,8 @@ export class MockEWCServer {
   }
 
   handleClientMessage(message) {
+    console.log('Mock server received:', message)
+    
     // Check if this matches any expected message
     const expectedIndex = this.expectedMessages.findIndex(expected => 
       JSON.stringify(expected) === JSON.stringify(message)

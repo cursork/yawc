@@ -22,6 +22,7 @@ export function sendEvent(component: YawcComponent, eventName: string, info?: an
   }
   
   console.log('Sending event:', eventMessage)
+  console.log('WebSocket connected:', yawc.W.isConnected())
   yawc.W.send(eventMessage)
 }
 

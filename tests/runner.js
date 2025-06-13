@@ -125,13 +125,71 @@ class TestRunner {
       if (trimmed.startsWith('T: ')) {
         // T: messages are sent TO yawc (from mock server)
         const json = trimmed.substring(3)
-        this.mockServer.queueMessage(JSON.parse(json))
+        const message = JSON.parse(json)
+        console.log('Queueing message:', message)
+        this.mockServer.queueMessage(message)
       } else if (trimmed.startsWith('R: ')) {
         // R: messages are expected FROM yawc (to mock server)
         const json = trimmed.substring(3)
         this.mockServer.expectMessage(JSON.parse(json))
+      } else if (trimmed.startsWith('U: ')) {
+        // U: user actions to simulate
+        const json = trimmed.substring(3)
+        const action = JSON.parse(json)
+        // Wait a bit longer for DOM to settle before user actions
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        await this.simulateUserAction(action)
       }
     }
+  }
+
+  async simulateUserAction(action) {
+    const { Action, ID } = action
+    
+    // Debug: Check what elements exist before clicking
+    const elements = await this.browser.page.evaluate((targetId) => {
+      const allElements = Array.from(document.querySelectorAll('[id]')).map(el => ({
+        id: el.id,
+        tagName: el.tagName,
+        visible: el.offsetParent !== null
+      }))
+      console.log('All elements with IDs:', allElements)
+      
+      const targetElement = document.getElementById(targetId)
+      if (targetElement) {
+        const computedStyle = window.getComputedStyle(targetElement)
+        console.log(`Target element ${targetId}:`, {
+          tagName: targetElement.tagName,
+          style: targetElement.style.cssText,
+          visible: targetElement.offsetParent !== null,
+          rect: targetElement.getBoundingClientRect(),
+          computedStyle: {
+            display: computedStyle.display,
+            visibility: computedStyle.visibility,
+            opacity: computedStyle.opacity,
+            width: computedStyle.width,
+            height: computedStyle.height
+          }
+        })
+      } else {
+        console.log(`Target element ${targetId}: NOT FOUND`)
+      }
+      
+      return allElements
+    }, ID)
+    
+    console.log(`Available elements:`, elements)
+    
+    switch (Action) {
+      case 'click':
+        await this.browser.click(ID)
+        break
+      default:
+        throw new Error(`Unknown user action: ${Action}`)
+    }
+    
+    // Wait a bit for the action to be processed
+    await new Promise(resolve => setTimeout(resolve, 100))
   }
 
   async cleanup() {

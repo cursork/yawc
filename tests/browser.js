@@ -34,7 +34,7 @@ export class Browser {
   async getHTML() {
     // Get the Form element using yawc tree
     const html = await this.page.evaluate(() => {
-      const formComponent = Object.values(window.yawc.T.Roots).find(root => root.Type === 'Form')
+      const formComponent = Object.values(window.yawc.T.Roots).find(root => root.Properties.Type === 'Form')
       if (formComponent) {
         const formElement = document.getElementById(formComponent.ID)
         return formElement ? formElement.outerHTML : '<div>Form not found in DOM</div>'
@@ -51,6 +51,31 @@ export class Browser {
     
     // Reconnect to mock server
     await this.connectToMockServer()
+  }
+
+  async click(elementId) {
+    // Debug right before click
+    await this.page.evaluate((id) => {
+      const el = document.getElementById(id)
+      console.log(`Just before click - element ${id}:`, el ? 'EXISTS' : 'MISSING')
+      if (el) {
+        const rect = el.getBoundingClientRect()
+        console.log('Element rect:', rect)
+        console.log('Element visible:', rect.width > 0 && rect.height > 0)
+      }
+    }, elementId)
+    
+    // Try using evaluate to click instead of Playwright's click
+    const clickResult = await this.page.evaluate((id) => {
+      const element = document.getElementById(id)
+      if (element) {
+        element.click()
+        return 'clicked'
+      }
+      return 'element not found'
+    }, elementId)
+    
+    console.log('Click result:', clickResult)
   }
 
   async close() {

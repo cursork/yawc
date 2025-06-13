@@ -38,24 +38,26 @@ export class SnabbdomRenderer implements Renderer {
   }
 
   private renderFull(): void {
-    // Find the Form component among roots
     const formComponent = Object.values(yawc.T.Roots).find(root => root.Properties.Type === 'Form')
     
     if (formComponent) {
       const formVNode = this.renderComponent(formComponent)
       const appVNode = h('div', { attrs: { id: 'app' } }, [formVNode])
       this.vnode = this.patch(this.vnode, appVNode)
+      
+      this.updateDOMProperties()
     } else {
-      // No Form found - render empty div
       const emptyVNode = h('div', { attrs: { id: 'app' } }, 'No Form component found')
       this.vnode = this.patch(this.vnode, emptyVNode)
     }
   }
 
   private renderPartial(component: YawcComponent): void {
-    // For now, do a full re-render
-    // TODO: Implement efficient partial updates
-    this.renderFull()
+    const newVNode = this.renderComponent(component)
+    const element = document.getElementById(component.ID)
+    if (element) {
+      this.patch(element, newVNode)
+    }
   }
 
   private renderComponent(component: YawcComponent): VNode {
@@ -80,5 +82,24 @@ export class SnabbdomRenderer implements Renderer {
   // Register custom component renderer
   registerComponent(type: string, renderer: (component: YawcComponent) => VNode): void {
     this.componentRenderers[type] = renderer
+  }
+
+  private updateDOMProperties(): void {
+    const components = yawc.T.getComponents()
+    components.forEach(component => {
+      const element = document.getElementById(component.ID)
+      if (element) {
+        const rect = element.getBoundingClientRect()
+        const computedStyle = window.getComputedStyle(element)
+        
+        if (!component.Properties.Size) {
+          yawc.T.mergeProps(component.ID, { Size: [rect.height, rect.width] })
+        }
+        
+        if (!component.Properties.Posn && computedStyle.position === 'absolute') {
+          yawc.T.mergeProps(component.ID, { Posn: [rect.top, rect.left] })
+        }
+      }
+    })
   }
 }

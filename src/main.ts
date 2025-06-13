@@ -88,7 +88,13 @@ yawc.W.onNQ((data) => {
   yawc.Q.handleResponse({ NQ: data })
 })
 
-// Example of connecting to EWC server (commented out for demo)
-// yawc.W.connect('ws://localhost:8080')
+// Auto-connect if CONNECT_PORT is set via Vite
+if (import.meta.env.CONNECT_PORT) {
+  const port = import.meta.env.CONNECT_PORT
+  console.log(`Auto-connecting to ws://localhost:${port}`)
+  yawc.W.connect(`ws://localhost:${port}`)
+} else {
+  createExample()
+}
 
 console.log('yawc initialized. Check window.yawc for global access.')

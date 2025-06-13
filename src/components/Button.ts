@@ -2,6 +2,7 @@ import { h } from 'snabbdom'
 import type { VNode } from 'snabbdom'
 import type { YawcComponent } from '../types'
 import { yawc } from '../yawc'
+import { sendEvent } from '../events'
 
 export function renderButton(component: YawcComponent): VNode {
   const caption = component.Properties?.Caption || ''
@@ -36,6 +37,7 @@ export function renderButton(component: YawcComponent): VNode {
             const target = event.target as HTMLInputElement
             const newState = target.checked ? 1 : 0
             yawc.T.mergeProps(component.ID, { State: newState })
+            sendEvent(component, 'Select')
           }
         }
       }),
@@ -45,6 +47,11 @@ export function renderButton(component: YawcComponent): VNode {
   
   return h('button', {
     attrs: { id: component.ID },
-    style
+    style,
+    on: {
+      click: () => {
+        sendEvent(component, 'Select')
+      }
+    }
   }, caption)
 }

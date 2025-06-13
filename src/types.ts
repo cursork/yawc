@@ -35,6 +35,7 @@ export interface EWCMessage {
   WG?: { [key: string]: any }
   EX?: { [key: string]: any }
   NQ?: { [key: string]: any }
+  Event?: { EventName: string, ID: string, Info?: any }
 }
 
 export interface QueuedMessage {

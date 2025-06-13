@@ -1,0 +1,4 @@
+T: {"WC": {"Type": "Form", "ID": "F1"}}
+T: {"WC": {"Type": "SubForm", "ID": "F1.SF"}}
+T: {"WC": {"Type": "Label", "ID": "F1.SF.L1"}}
+T: {"WS": {"ID": "F1.SF.L1", "Properties": {"Caption": "Hello World"}}}

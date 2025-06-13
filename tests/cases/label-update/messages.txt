@@ -1,4 +1,4 @@
-T: {"WC": {"Type": "Form", "ID": "F1"}}
-T: {"WC": {"Type": "Label", "ID": "F1.L1"}}
+T: {"WC": {"ID": "F1", "Properties": {"Type": "Form"}}}
+T: {"WC": {"ID": "F1.L1", "Properties": {"Type": "Label"}}}
 T: {"WS": {"ID": "F1.L1", "Properties": {"Caption": "Initial Text"}}}
 T: {"WS": {"ID": "F1.L1", "Properties": {"Caption": "Updated Text"}}}

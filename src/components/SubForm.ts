@@ -24,8 +24,8 @@ export function renderSubForm(component: YawcComponent): VNode {
 }
 
 function renderChild(component: YawcComponent): VNode {
-  // Import renderer dynamically to avoid circular imports
-  const renderer = (yawc.R as any).componentRenderers?.[component.Type]
+  const componentType = component.Properties.Type
+  const renderer = (yawc.R as any).componentRenderers?.[componentType]
   
   if (renderer) {
     return renderer(component)
@@ -35,5 +35,5 @@ function renderChild(component: YawcComponent): VNode {
   return h('div', {
     attrs: { id: component.ID },
     style: { border: '1px solid red', padding: '5px', color: 'red' }
-  }, `Unknown component: ${component.Type}`)
+  }, `Unknown component: ${componentType}`)
 }

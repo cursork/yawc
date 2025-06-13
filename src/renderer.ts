@@ -39,7 +39,7 @@ export class SnabbdomRenderer implements Renderer {
 
   private renderFull(): void {
     // Find the Form component among roots
-    const formComponent = Object.values(yawc.T.Roots).find(root => root.Type === 'Form')
+    const formComponent = Object.values(yawc.T.Roots).find(root => root.Properties.Type === 'Form')
     
     if (formComponent) {
       const formVNode = this.renderComponent(formComponent)
@@ -59,7 +59,8 @@ export class SnabbdomRenderer implements Renderer {
   }
 
   private renderComponent(component: YawcComponent): VNode {
-    const renderer = this.componentRenderers[component.Type]
+    const componentType = component.Properties.Type
+    const renderer = this.componentRenderers[componentType]
     
     if (!renderer) {
       // Unknown component type - render as div with error
@@ -70,7 +71,7 @@ export class SnabbdomRenderer implements Renderer {
           padding: '10px', 
           color: 'red' 
         } 
-      }, `Unknown component type: ${component.Type}`)
+      }, `Unknown component type: ${componentType}`)
     }
 
     return renderer(component)

@@ -20,6 +20,12 @@ export class WS implements WebSocketManager {
       this.ws.onopen = () => {
         console.log('WebSocket connected')
         this.reconnectAttempts = 0
+        console.log('About to send handshake...')
+        // Small delay to ensure WebSocket is fully ready
+        setTimeout(() => {
+          this.sendHandshake()
+        }, 10)
+        console.log('Handshake method scheduled')
       }
       
       this.ws.onmessage = (event) => {
@@ -117,6 +123,57 @@ export class WS implements WebSocketManager {
   }
 
   isConnected(): boolean {
-    return this.ws?.readyState === WebSocket.OPEN
+    return this.ws?.readyState === 1 // 1 = OPEN
+  }
+
+  private sendHandshake(): void {
+    console.log('sendHandshake: entry')
+    
+    if (!this.ws) {
+      console.log('sendHandshake: WebSocket is null')
+      return
+    }
+    
+    console.log('sendHandshake: WebSocket readyState:', this.ws.readyState)
+    
+    if (this.ws.readyState !== 1) { // 1 = OPEN
+      console.log('sendHandshake: WebSocket not ready')
+      return
+    }
+
+    // Check if we're in browser context
+    if (typeof window === 'undefined') {
+      console.log('sendHandshake: Not in browser context')
+      return
+    }
+
+    console.log('sendHandshake: Preparing messages')
+
+    // Send device capabilities
+    const deviceCapabilities = {
+      DeviceCapabilities: {
+        ViewPort: [window.innerWidth || 932, window.innerHeight || 1479],
+        ScreenSize: [window.screen?.width || 1169, window.screen?.height || 1800], 
+        DPR: window.devicePixelRatio || 2,
+        PPI: 200
+      }
+    }
+    
+    // Send initialization
+    const initialization = {
+      Initialise: {
+        Version: "0.2.3",
+        Name: "yawc Client", 
+        URL: window.location.href
+      }
+    }
+
+    console.log('sendHandshake: Sending deviceCapabilities:', deviceCapabilities)
+    this.ws.send(JSON.stringify(deviceCapabilities))
+    
+    console.log('sendHandshake: Sending initialization:', initialization)
+    this.ws.send(JSON.stringify(initialization))
+    
+    console.log('sendHandshake: Complete')
   }
 }

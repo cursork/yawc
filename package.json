@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "node tests/runner.js"
+    "test": "node tests/runner.js",
+    "test:demo": "node tests/integration/demo-launch.js"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

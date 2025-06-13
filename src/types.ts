@@ -26,8 +26,8 @@ export interface YawcTree {
 }
 
 export interface EWCMessage {
-  WC?: { Type: string, [key: string]: any }
-  WS?: { [key: string]: any }
+  WC?: { ID: string, Properties: { Type: string, [key: string]: any } }
+  WS?: { ID: string, Properties: { [key: string]: any } }
   WG?: { [key: string]: any }
   EX?: { [key: string]: any }
   NQ?: { [key: string]: any }

@@ -129,25 +129,36 @@ class SimpleFormVisualTest {
     const actualPath = join(this.actualDir, `${this.testName}.png`)
     writeFileSync(actualPath, screenshot)
     
-    const referenceBuffer = readFileSync(referencePath)
+    // Use Playwright's visual comparison
+    const { PNG } = await import('pngjs')
     
-    // if (screenshot.length !== referenceBuffer.length) {
-    //   return {
-    //     status: 'different',
-    //     message: `Image sizes differ: actual ${screenshot.length} vs reference ${referenceBuffer.length}`,
-    //     actualPath,
-    //     referencePath
-    //   }
-    // }
+    const actualPng = PNG.sync.read(screenshot)
+    const referencePng = PNG.sync.read(readFileSync(referencePath))
+    
+    if (actualPng.width !== referencePng.width || actualPng.height !== referencePng.height) {
+      return {
+        status: 'different',
+        message: `Image dimensions differ: actual ${actualPng.width}x${actualPng.height} vs reference ${referencePng.width}x${referencePng.height}`,
+        actualPath,
+        referencePath
+      }
+    }
     
     let differentPixels = 0
-    for (let i = 0; i < screenshot.length; i++) {
-      if (screenshot[i] !== referenceBuffer[i]) {
+    const totalPixels = actualPng.width * actualPng.height
+    
+    for (let i = 0; i < actualPng.data.length; i += 4) {
+      const rSame = actualPng.data[i] === referencePng.data[i]
+      const gSame = actualPng.data[i + 1] === referencePng.data[i + 1]  
+      const bSame = actualPng.data[i + 2] === referencePng.data[i + 2]
+      const aSame = actualPng.data[i + 3] === referencePng.data[i + 3]
+      
+      if (!rSame || !gSame || !bSame || !aSame) {
         differentPixels++
       }
     }
     
-    const diffPercentage = (differentPixels / screenshot.length) * 100
+    const diffPercentage = (differentPixels / totalPixels) * 100
     const threshold = 0.1
     
     if (diffPercentage > threshold) {

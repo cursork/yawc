@@ -7,6 +7,8 @@ import { yawc } from './yawc'
 import { renderForm } from './components/Form'
 import { renderSubForm } from './components/SubForm'  
 import { renderLabel } from './components/Label'
+import { renderButton } from './components/Button'
+import { renderCombo } from './components/Combo'
 
 export class SnabbdomRenderer implements Renderer {
   private patch = init([
@@ -21,7 +23,9 @@ export class SnabbdomRenderer implements Renderer {
   private componentRenderers: Record<string, (component: YawcComponent) => VNode> = {
     'Form': renderForm,
     'SubForm': renderSubForm,
-    'Label': renderLabel
+    'Label': renderLabel,
+    'Button': renderButton,
+    'Combo': renderCombo
   }
 
   render(id?: string): void {

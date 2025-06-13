@@ -30,10 +30,15 @@ export class WS implements WebSocketManager {
       
       this.ws.onmessage = (event) => {
         try {
+          console.log('Raw WebSocket message:', event.data)
           const message: EWCMessage = JSON.parse(event.data)
+          console.log('Parsed message:', message)
           this.handleMessage(message)
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error)
+          console.error('Error details:', error.message)
+          console.error('Raw message data:', event.data)
+          console.error('Error stack:', error.stack)
         }
       }
       

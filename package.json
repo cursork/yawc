@@ -8,6 +8,8 @@
     "preview": "vite preview",
     "test": "node tests/runner.js",
     "test:demo": "node tests/integration/demo-launch.js",
+    "test:visual": "node tests/visual/simple-form.js",
+    "test:visual:update": "node tests/visual/simple-form.js --update",
     "connect": "CONNECT_PORT=${PORT:-22322} vite"
   },
   "devDependencies": {

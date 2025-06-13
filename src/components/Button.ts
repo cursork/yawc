@@ -23,6 +23,7 @@ export function renderButton(component: YawcComponent): VNode {
     style.width = String(component.Properties.Size[1]) + 'px'
   }
   
+  // style.backgroundColor='blue';
   if (isCheckbox) {
     const checked = component.Properties?.State === 1
     return h('label', {

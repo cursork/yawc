@@ -3,13 +3,13 @@ import { yawc } from './yawc'
 // Example usage - create the structure from DESIGN.md
 function createExample() {
   // Create Form
-  yawc.T.create('F1', 'Form')
+  yawc.T.create('F1', { Type: 'Form' })
   
   // Create SubForm inside Form
-  yawc.T.create('F1.SF', 'SubForm')
+  yawc.T.create('F1.SF', { Type: 'SubForm' })
   
   // Create Label inside SubForm
-  yawc.T.create('F1.SF.L1', 'Label')
+  yawc.T.create('F1.SF.L1', { Type: 'Label' })
   yawc.T.mergeProps('F1.SF.L1', { Caption: 'This is the text of the label' })
   
   // Render the application
@@ -31,7 +31,7 @@ yawc.W.onWC((data) => {
     return
   }
   console.log(`Creating component: ${data.Properties.Type} (${data.ID})`)
-  yawc.T.create(data.ID, data.Properties.Type, data.Properties)
+  yawc.T.create(data.ID, data.Properties)
   yawc.R.render()
 })
 

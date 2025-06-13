@@ -1,4 +1,4 @@
-import type { YawcTree, YawcComponent } from './types'
+import type { YawcTree, YawcComponent, ComponentProperties } from './types'
 
 export class Tree implements YawcTree {
   Roots: Record<string, YawcComponent> = {}
@@ -10,12 +10,11 @@ export class Tree implements YawcTree {
   }
 
   // WC - Create component
-  create(id: string, type: string, properties?: Record<string, any>): void {
+  create(id: string, properties: ComponentProperties): void {
     const component: YawcComponent = {
       ID: id,
-      Type: type,
       Children: {},
-      Properties: properties || {}
+      Properties: properties
     }
 
     const parentId = this.getParentId(id)

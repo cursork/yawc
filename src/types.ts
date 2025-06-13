@@ -1,16 +1,20 @@
 // Core types for yawc architecture
+export interface ComponentProperties {
+  Type: string
+  [key: string]: any
+}
+
 export interface YawcComponent {
   ID: string
-  Type: string
   Children?: Record<string, YawcComponent>
-  Properties?: Record<string, any>
+  Properties: ComponentProperties
 }
 
 export interface YawcTree {
   Roots: Record<string, YawcComponent>
   
   // WC - Create component
-  create(id: string, type: string, properties?: Record<string, any>): void
+  create(id: string, properties: ComponentProperties): void
   
   // WS - Set properties
   mergeProps(id: string, properties: Record<string, any>): void

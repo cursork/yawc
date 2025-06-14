@@ -158,7 +158,7 @@ class TestRunner {
   }
 
   async simulateUserAction(action) {
-    const { Action, ID } = action
+    const { Action, ID, Value } = action
     
     // Debug: Check what elements exist before clicking
     const elements = await this.browser.page.evaluate((targetId) => {
@@ -197,6 +197,9 @@ class TestRunner {
     switch (Action) {
       case 'click':
         await this.browser.click(ID)
+        break
+      case 'select':
+        await this.browser.select(ID, Value)
         break
       default:
         throw new Error(`Unknown user action: ${Action}`)

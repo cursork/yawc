@@ -1,0 +1,4 @@
+T: {"WC":{"ID":"F1","Properties":{"Type":"Form","Size":[200,300]}}}
+T: {"WC":{"ID":"F1.C1","Properties":{"Type":"Combo","Items":["Option 1","Option 2","Option 3"],"Event":[["Select",""]],"Posn":[20,20],"Size":[25,100]}}}
+U: {"Action":"select","ID":"F1.C1","Value":"Option 2"}
+R: {"Event":{"EventName":"Select","ID":"F1.C1"}}

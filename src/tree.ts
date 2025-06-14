@@ -1,7 +1,7 @@
-import type { YawcTree, YawcComponent, ComponentProperties } from './types'
+import type { YawcTree, ComponentInstance, ComponentProperties } from './types'
 
 export class Tree implements YawcTree {
-  Roots: Record<string, YawcComponent> = {}
+  Roots: Record<string, ComponentInstance> = {}
 
   // Extract parent ID from component ID (everything before last '.')
   private getParentId(id: string): string | null {
@@ -11,10 +11,17 @@ export class Tree implements YawcTree {
 
   // WC - Create component
   create(id: string, properties: ComponentProperties): void {
-    const component: YawcComponent = {
+    // Apply component defaults
+    const yawc = (globalThis as any).yawc || (window as any).yawc
+    const componentHandler = yawc?.C?.[properties.Type]
+    const mergedProperties = componentHandler?.mergeDefaults 
+      ? componentHandler.mergeDefaults(properties)
+      : properties
+    
+    const component: ComponentInstance = {
       ID: id,
       Children: {},
-      Properties: properties
+      Properties: mergedProperties
     }
 
     const parentId = this.getParentId(id)
@@ -57,12 +64,12 @@ export class Tree implements YawcTree {
   }
 
   // Find component by ID
-  find(id: string): YawcComponent | undefined {
+  find(id: string): ComponentInstance | undefined {
     if (this.Roots[id]) {
       return this.Roots[id]
     }
 
-    let found: YawcComponent | undefined
+    let found: ComponentInstance | undefined
     this.walkTree((component) => {
       if (component.ID === id) {
         found = component
@@ -77,12 +84,12 @@ export class Tree implements YawcTree {
   // Walk the entire tree
   private walkTree(
     callback: (
-      component: YawcComponent, 
-      parent?: YawcComponent, 
+      component: ComponentInstance, 
+      parent?: ComponentInstance, 
       key?: string
     ) => boolean
   ): void {
-    const walk = (component: YawcComponent, parent?: YawcComponent, key?: string): boolean => {
+    const walk = (component: ComponentInstance, parent?: ComponentInstance, key?: string): boolean => {
       if (callback(component, parent, key)) {
         return true // Stop walking
       }
@@ -105,8 +112,8 @@ export class Tree implements YawcTree {
   }
 
   // Get all components in rendering order
-  getComponents(): YawcComponent[] {
-    const components: YawcComponent[] = []
+  getComponents(): ComponentInstance[] {
+    const components: ComponentInstance[] = []
     this.walkTree((component) => {
       components.push(component)
       return false // Continue walking

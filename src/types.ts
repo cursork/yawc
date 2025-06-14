@@ -1,17 +1,19 @@
 // Core types for yawc architecture
+import type { VNode } from 'snabbdom'
+
 export interface ComponentProperties {
   Type: string
   [key: string]: any
 }
 
-export interface YawcComponent {
+export interface ComponentInstance {
   ID: string
-  Children?: Record<string, YawcComponent>
+  Children?: Record<string, ComponentInstance>
   Properties: ComponentProperties
 }
 
 export interface YawcTree {
-  Roots: Record<string, YawcComponent>
+  Roots: Record<string, ComponentInstance>
   
   // WC - Create component
   create(id: string, properties: ComponentProperties): void
@@ -23,10 +25,10 @@ export interface YawcTree {
   destroy(id: string): void
   
   // Find component by ID
-  find(id: string): YawcComponent | undefined
+  find(id: string): ComponentInstance | undefined
   
   // Get all components in rendering order
-  getComponents(): YawcComponent[]
+  getComponents(): ComponentInstance[]
 }
 
 export interface EWCMessage {
@@ -43,18 +45,25 @@ export interface QueuedMessage {
   callback?: (response: EWCMessage) => void
 }
 
+export interface Component {
+  mergeDefaults(properties: ComponentProperties): ComponentProperties
+  render(component: ComponentInstance): VNode
+}
+
+export interface ComponentRegistry {
+  [componentType: string]: Component
+}
+
 export interface Yawc {
   T: YawcTree  // Tree - global state
   R: Renderer  // Renderer - pluggable rendering system
   W: WebSocketManager  // WebSocket - server communication
   Q: QueueManager  // Queue - message queuing
+  C: ComponentRegistry  // Components - component registry
 }
 
 export interface Renderer {
   render(id?: string): void
-  
-  // Register custom component renderer
-  registerComponent(type: string, renderer: (component: YawcComponent) => any): void
 }
 
 export interface WebSocketManager {

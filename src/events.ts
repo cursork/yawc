@@ -1,7 +1,7 @@
 import { yawc } from './yawc'
-import type { YawcComponent } from './types'
+import type { ComponentInstance } from './types'
 
-export function sendEvent(component: YawcComponent, eventName: string, info?: any): void {
+export function sendEvent(component: ComponentInstance, eventName: string, info?: any): void {
   if (!component.Properties.Event) {
     return
   }
@@ -24,7 +24,7 @@ export function sendEvent(component: YawcComponent, eventName: string, info?: an
   yawc.W.send(eventMessage)
 }
 
-export function hasEvent(component: YawcComponent, eventName: string): boolean {
+export function hasEvent(component: ComponentInstance, eventName: string): boolean {
   if (!component.Properties.Event) {
     return false
   }

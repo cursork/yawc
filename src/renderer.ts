@@ -1,14 +1,6 @@
 import { init, h, classModule, propsModule, styleModule, eventListenersModule, attributesModule } from 'snabbdom'
 import type { VNode } from 'snabbdom'
-import type { Renderer, YawcComponent } from './types'
-import { yawc } from './yawc'
-
-// Component renderers
-import { renderForm } from './components/Form'
-import { renderSubForm } from './components/SubForm'  
-import { renderLabel } from './components/Label'
-import { renderButton } from './components/Button'
-import { renderCombo } from './components/Combo'
+import type { Renderer, ComponentInstance } from './types'
 
 export class SnabbdomRenderer implements Renderer {
   private patch = init([
@@ -20,15 +12,11 @@ export class SnabbdomRenderer implements Renderer {
   ])
   
   private vnode: VNode | Element = document.getElementById('app')!
-  private componentRenderers: Record<string, (component: YawcComponent) => VNode> = {
-    'Form': renderForm,
-    'SubForm': renderSubForm,
-    'Label': renderLabel,
-    'Button': renderButton,
-    'Combo': renderCombo
-  }
 
   render(id?: string): void {
+    const yawc = (window as any).yawc
+    if (!yawc) return
+    
     if (id) {
       // Partial re-render of specific component
       const component = yawc.T.find(id)
@@ -42,10 +30,13 @@ export class SnabbdomRenderer implements Renderer {
   }
 
   private renderFull(): void {
-    const formComponent = Object.values(yawc.T.Roots).find(root => root.Properties.Type === 'Form')
+    const yawc = (window as any).yawc
+    if (!yawc) return
+    
+    const formComponent = Object.values(yawc.T.Roots).find((root: any) => root.Properties.Type === 'Form')
     
     if (formComponent) {
-      const formVNode = this.renderComponent(formComponent)
+      const formVNode = this.renderComponent(formComponent as ComponentInstance)
       const appVNode = h('div', { attrs: { id: 'app' } }, [formVNode])
       this.vnode = this.patch(this.vnode, appVNode)
       
@@ -56,7 +47,7 @@ export class SnabbdomRenderer implements Renderer {
     }
   }
 
-  private renderPartial(component: YawcComponent): void {
+  private renderPartial(component: ComponentInstance): void {
     const newVNode = this.renderComponent(component)
     const element = document.getElementById(component.ID)
     if (element) {
@@ -64,11 +55,16 @@ export class SnabbdomRenderer implements Renderer {
     }
   }
 
-  private renderComponent(component: YawcComponent): VNode {
-    const componentType = component.Properties.Type
-    const renderer = this.componentRenderers[componentType]
+  renderComponent(component: ComponentInstance): VNode {
+    const yawc = (window as any).yawc
+    if (!yawc) {
+      return h('div', { attrs: { id: component.ID } }, 'yawc not initialized')
+    }
     
-    if (!renderer) {
+    const componentType = component.Properties.Type
+    const componentHandler = yawc.C[componentType]
+    
+    if (!componentHandler) {
       // Unknown component type - render as div with error
       return h('div', { 
         attrs: { id: component.ID },
@@ -80,17 +76,15 @@ export class SnabbdomRenderer implements Renderer {
       }, `Unknown component type: ${componentType}`)
     }
 
-    return renderer(component)
-  }
-
-  // Register custom component renderer
-  registerComponent(type: string, renderer: (component: YawcComponent) => VNode): void {
-    this.componentRenderers[type] = renderer
+    return componentHandler.render(component)
   }
 
   private updateDOMProperties(): void {
+    const yawc = (window as any).yawc
+    if (!yawc) return
+    
     const components = yawc.T.getComponents()
-    components.forEach(component => {
+    components.forEach((component: ComponentInstance) => {
       const element = document.getElementById(component.ID)
       if (element) {
         const rect = element.getBoundingClientRect()

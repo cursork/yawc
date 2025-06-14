@@ -6,9 +6,16 @@
 - Implement more event types beyond Select (KeyPress, Change, etc.)
 - Add visual regression testing for more complex layouts
 
+## Next Session Priority Items
+
+- Experiment with sharing code from legacy system to help building new components
+- Implement Edit component (HTML input) - requires architectural decision on whether to split it up on JS side or keep unified
+- Discuss global handlers/common approaches for events like click (43 components total needed for feature parity with existing system)
+- WX messages - we use that for EvalJS
+
 ## System Improvements
 
-- Remove the 2000ms delay workaround in test runner after fixing timing issues
+- Remove the 2000ms delay workaround in test runner after fixing timing issues - is an intermediate option to run tests reducing it slowly to find a better N milliseconds?
 - Optimize DOM property synchronization for Size/Posn
 - Implement efficient partial rendering instead of full re-renders
 

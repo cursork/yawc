@@ -1,4 +1,5 @@
 import type { WebSocketManager, EWCMessage } from './types'
+import { log, warn, err } from './log'
 
 export class WS implements WebSocketManager {
   private ws: WebSocket | null = null
@@ -29,22 +30,22 @@ export class WS implements WebSocketManager {
           const message: EWCMessage = JSON.parse(event.data)
           this.handleMessage(message)
         } catch (error) {
-          console.error('Failed to parse WebSocket message:', error)
-          console.error('Raw message data:', event.data)
+          err('Failed to parse WebSocket message:', error)
+          err('Raw message data:', event.data)
         }
       }
       
       this.ws.onclose = (event) => {
-        console.log('WebSocket disconnected:', event.code, event.reason)
+        log('WebSocket disconnected:', event.code, event.reason)
         this.attemptReconnect(url)
       }
       
       this.ws.onerror = (error) => {
-        console.error('WebSocket error:', error)
+        err('WebSocket error:', error)
       }
       
     } catch (error) {
-      console.error('Failed to connect WebSocket:', error)
+      err('Failed to connect WebSocket:', error)
     }
   }
 
@@ -52,7 +53,7 @@ export class WS implements WebSocketManager {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message))
     } else {
-      console.warn('WebSocket not connected, cannot send message:', message)
+      warn('WebSocket not connected, cannot send message:', message)
     }
   }
 
@@ -102,13 +103,13 @@ export class WS implements WebSocketManager {
   private attemptReconnect(url: string): void {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++
-      console.log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`)
+      log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`)
       
       setTimeout(() => {
         this.connect(url)
       }, this.reconnectDelay * this.reconnectAttempts)
     } else {
-      console.error('Max reconnection attempts reached')
+      err('Max reconnection attempts reached')
     }
   }
 

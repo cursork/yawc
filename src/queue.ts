@@ -1,4 +1,5 @@
 import type { QueueManager, EWCMessage, QueuedMessage } from './types'
+import { warn } from './log'
 
 export class Queue implements QueueManager {
   private queue: QueuedMessage[] = []
@@ -32,7 +33,7 @@ export class Queue implements QueueManager {
 
     // Set up response handling with timeout
     const timeoutId = setTimeout(() => {
-      console.warn('Queue message timeout:', queuedMessage.message)
+      warn('Queue message timeout:', queuedMessage.message)
       this.processNext()
     }, this.timeoutMs)
 

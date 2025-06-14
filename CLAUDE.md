@@ -90,5 +90,5 @@ Use `TODO.md` only for current, actionable tasks. Move completed items to decisi
 ## Workflow Rules
 
 - If user says just 'wip' in a message, run `git add .` and `git commit -m "wip"`
-- If user says just 'save chat' in a message, create a timestamped chat history file in the `chats/` directory using the format from previous session dumps. Include the full conversation from this session plus any previous session summary if this was a continuation. Use timestamp format `YYYYMMDD_HHMMSS.md`
+- If user says just 'save chat' in a message, create a timestamped chat history file in the `chats/` directory using the format from previous session dumps. Include the full conversation from this session plus any previous session summary if this was a continuation. Use timestamp format `YYYYMMDD_HHMMSS.md`. Also update `TODO.md` by moving completed items from the current session to a "Completed Items" section with the current date.
 - If user says just 'status' in a message, read the most recent chat file from `chats/` directory, the `TODO.md` file, and the `timesheet.md` file, then provide a brief summary of what was being worked on, total hours logged, and suggest next steps or items to tackle

@@ -21,8 +21,8 @@ export function sendEvent(component: YawcComponent, eventName: string, info?: an
     }
   }
   
-  console.log('Sending event:', eventMessage)
-  console.log('WebSocket connected:', yawc.W.isConnected())
+  // TODO: Debug double-send issue - event is being sent twice to server
+  // This happens during button click tests, needs investigation
   yawc.W.send(eventMessage)
 }
 

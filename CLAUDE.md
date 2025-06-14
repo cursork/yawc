@@ -59,6 +59,23 @@ Key complexity: Some operations require server confirmation before UI updates (l
 - Keep code concise and readable without verbose naming
 - Every component must include its ID in the rendered element using `attrs: { id: component.ID }`
 
+## Decision Making and Documentation
+
+When facing tricky technical issues or implementation choices, create a decision record in the `decisions/` folder using the format `decisions/NNNNN-descriptive-title.md`. These ADRs (Architecture Decision Records) should document:
+
+1. **Context**: The problem or choice being made
+2. **Decision**: What was chosen and why
+3. **Consequences**: Trade-offs, benefits, and concerns
+4. **Alternatives Considered**: Other options that were rejected
+
+Examples of decision-worthy issues:
+- Complex workarounds or fixes with trade-offs
+- Architecture choices with multiple valid approaches
+- Performance optimizations with readability concerns
+- Test framework design decisions
+
+Use `TODO.md` only for current, actionable tasks. Move completed items to decision records if they involved significant design choices.
+
 ## Workflow Rules
 
 - If user says just 'wip' in a message, run `git add .` and `git commit -m "wip"`

@@ -120,8 +120,9 @@ class TestRunner {
   async processMessages(messages) {
     const lines = messages.split('\n').filter(line => line.trim())
     
-    for (const line of lines) {
-      const trimmed = line.trim()
+    for (let i = 0; i < lines.length; i++) {
+      const trimmed = lines[i].trim()
+      
       if (trimmed.startsWith('T: ')) {
         // T: messages are sent TO yawc (from mock server)
         const json = trimmed.substring(3)
@@ -129,15 +130,31 @@ class TestRunner {
         console.log('Queueing message:', message)
         this.mockServer.queueMessage(message)
       } else if (trimmed.startsWith('R: ')) {
+        // Skip R: if previous line was U: (already pre-processed)
+        if (i > 0 && lines[i - 1].trim().startsWith('U: ')) {
+          console.log('Skipping R: line (already pre-processed after U:)')
+          continue
+        }
+        
         // R: messages are expected FROM yawc (to mock server)
         const json = trimmed.substring(3)
+        console.log('Expecting message:', JSON.parse(json))
         this.mockServer.expectMessage(JSON.parse(json))
       } else if (trimmed.startsWith('U: ')) {
         // U: user actions to simulate
         const json = trimmed.substring(3)
         const action = JSON.parse(json)
-        // Wait a bit longer for DOM to settle before user actions
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        
+        // Check if next line is R: and set expectation first
+        if (i + 1 < lines.length && lines[i + 1].trim().startsWith('R: ')) {
+          const nextJson = lines[i + 1].trim().substring(3)
+          console.log('Pre-setting expectation for user action:', JSON.parse(nextJson))
+          this.mockServer.expectMessage(JSON.parse(nextJson))
+        }
+        
+        // TODO: This 2000ms delay is masking a timing issue - should be removed
+        // after fixing the real problem with event handler attachment
+        await new Promise(resolve => setTimeout(resolve, 2000))
         await this.simulateUserAction(action)
       }
     }

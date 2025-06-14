@@ -18,27 +18,19 @@ export class WS implements WebSocketManager {
       this.ws = new WebSocket(url)
       
       this.ws.onopen = () => {
-        console.log('WebSocket connected')
         this.reconnectAttempts = 0
-        console.log('About to send handshake...')
-        // Small delay to ensure WebSocket is fully ready
         setTimeout(() => {
           this.sendHandshake()
         }, 10)
-        console.log('Handshake method scheduled')
       }
       
       this.ws.onmessage = (event) => {
         try {
-          console.log('Raw WebSocket message:', event.data)
           const message: EWCMessage = JSON.parse(event.data)
-          console.log('Parsed message:', message)
           this.handleMessage(message)
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error)
-          console.error('Error details:', error.message)
           console.error('Raw message data:', event.data)
-          console.error('Error stack:', error.stack)
         }
       }
       
@@ -132,27 +124,9 @@ export class WS implements WebSocketManager {
   }
 
   private sendHandshake(): void {
-    console.log('sendHandshake: entry')
-    
-    if (!this.ws) {
-      console.log('sendHandshake: WebSocket is null')
+    if (!this.ws || this.ws.readyState !== 1 || typeof window === 'undefined') {
       return
     }
-    
-    console.log('sendHandshake: WebSocket readyState:', this.ws.readyState)
-    
-    if (this.ws.readyState !== 1) { // 1 = OPEN
-      console.log('sendHandshake: WebSocket not ready')
-      return
-    }
-
-    // Check if we're in browser context
-    if (typeof window === 'undefined') {
-      console.log('sendHandshake: Not in browser context')
-      return
-    }
-
-    console.log('sendHandshake: Preparing messages')
 
     // Send device capabilities
     const deviceCapabilities = {
@@ -173,12 +147,7 @@ export class WS implements WebSocketManager {
       }
     }
 
-    console.log('sendHandshake: Sending deviceCapabilities:', deviceCapabilities)
     this.ws.send(JSON.stringify(deviceCapabilities))
-    
-    console.log('sendHandshake: Sending initialization:', initialization)
     this.ws.send(JSON.stringify(initialization))
-    
-    console.log('sendHandshake: Complete')
   }
 }

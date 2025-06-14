@@ -47,33 +47,13 @@ export class MockEWCServer {
   }
 
   handleClientMessage(message, fromClient) {
-    console.log('Mock server received:', message)
-    console.log('Current client count:', this.clients.size)
-    
-    // Add a unique ID to each client for debugging
-    if (!fromClient._debugId) {
-      fromClient._debugId = Math.random().toString(36).substr(2, 9)
-    }
-    console.log('Message from client ID:', fromClient._debugId)
-    
     // Check if this matches any expected message
-    const expectedIndex = this.expectedMessages.findIndex(expected => {
-      const expectedJson = JSON.stringify(expected)
-      const messageJson = JSON.stringify(message)
-      const matches = expectedJson === messageJson
-      
-      if (!matches && message.Event) {
-        console.log('Event message comparison:')
-        console.log('Expected:', expectedJson)
-        console.log('Received:', messageJson)
-      }
-      
-      return matches
-    })
+    const expectedIndex = this.expectedMessages.findIndex(expected => 
+      JSON.stringify(expected) === JSON.stringify(message)
+    )
     
     if (expectedIndex >= 0) {
       this.expectedMessages.splice(expectedIndex, 1)
-      console.log('Mock server: Expected message received')
     } else {
       console.warn('Mock server: Unexpected message:', message)
     }

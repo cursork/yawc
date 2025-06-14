@@ -132,13 +132,11 @@ class TestRunner {
       } else if (trimmed.startsWith('R: ')) {
         // Skip R: if previous line was U: (already pre-processed)
         if (i > 0 && lines[i - 1].trim().startsWith('U: ')) {
-          console.log('Skipping R: line (already pre-processed after U:)')
           continue
         }
         
         // R: messages are expected FROM yawc (to mock server)
         const json = trimmed.substring(3)
-        console.log('Expecting message:', JSON.parse(json))
         this.mockServer.expectMessage(JSON.parse(json))
       } else if (trimmed.startsWith('U: ')) {
         // U: user actions to simulate
@@ -148,7 +146,6 @@ class TestRunner {
         // Check if next line is R: and set expectation first
         if (i + 1 < lines.length && lines[i + 1].trim().startsWith('R: ')) {
           const nextJson = lines[i + 1].trim().substring(3)
-          console.log('Pre-setting expectation for user action:', JSON.parse(nextJson))
           this.mockServer.expectMessage(JSON.parse(nextJson))
         }
         

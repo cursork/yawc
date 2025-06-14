@@ -54,58 +54,12 @@ export class Browser {
   }
 
   async click(elementId) {
-    // Check element position and clickability
-    const elementInfo = await this.page.evaluate((id) => {
-      const el = document.getElementById(id)
-      if (!el) return 'NOT_FOUND'
-      
-      const rect = el.getBoundingClientRect()
-      const computedStyle = window.getComputedStyle(el)
-      
-      return {
-        rect: { top: rect.top, left: rect.left, width: rect.width, height: rect.height },
-        style: {
-          position: computedStyle.position,
-          zIndex: computedStyle.zIndex,
-          pointerEvents: computedStyle.pointerEvents,
-          visibility: computedStyle.visibility,
-          display: computedStyle.display
-        },
-        offsetParent: el.offsetParent?.tagName || 'null'
-      }
-    }, elementId)
-    
-    console.log('Element info for click:', elementInfo)
-    
-    // Check how many times the button element exists in DOM
-    const buttonCount = await this.page.evaluate((id) => {
-      const elements = document.querySelectorAll(`#${id}`)
-      console.log(`Found ${elements.length} elements with ID ${id}`)
-      
-      // Also check if there are multiple buttons in general
-      const allButtons = document.querySelectorAll('button')
-      console.log(`Total buttons in DOM: ${allButtons.length}`)
-      allButtons.forEach((btn, i) => {
-        console.log(`Button ${i}: id=${btn.id}, text=${btn.textContent}`)
-      })
-      
-      return elements.length
-    }, elementId)
-    
-    console.log(`Button count: ${buttonCount}`)
-    
-    // Single click on the first element
-    const clickResult = await this.page.evaluate((id) => {
+    await this.page.evaluate((id) => {
       const element = document.getElementById(id)
       if (element) {
-        console.log('About to click element:', element.id)
         element.click()
-        return 'clicked_once'
       }
-      return 'element_not_found'
     }, elementId)
-    
-    console.log('Click result:', clickResult)
   }
 
   async close() {

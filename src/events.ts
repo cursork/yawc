@@ -21,8 +21,6 @@ export function sendEvent(component: YawcComponent, eventName: string, info?: an
     }
   }
   
-  // TODO: Debug double-send issue - event is being sent twice to server
-  // This happens during button click tests, needs investigation
   yawc.W.send(eventMessage)
 }
 

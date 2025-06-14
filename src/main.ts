@@ -21,7 +21,6 @@ createExample()
 
 // Set up WebSocket message handlers (when connecting to EWC server)
 yawc.W.onWC((data) => {
-  console.log('WC received:', data)
   if (!data.ID) {
     console.error('WC message missing ID:', data)
     return
@@ -30,7 +29,6 @@ yawc.W.onWC((data) => {
     console.error('WC message missing Type in Properties:', data)
     return
   }
-  console.log(`Creating component: ${data.Properties.Type} (${data.ID})`)
   yawc.T.create(data.ID, data.Properties)
   yawc.R.render()
 })
@@ -81,12 +79,10 @@ yawc.W.onWG((data) => {
     }
   }
   
-  console.log('Sending WG response:', response)
   yawc.W.send(response)
 })
 
 yawc.W.onNQ((data) => {
-  console.log('NQ message:', data)
   yawc.Q.handleResponse({ NQ: data })
 })
 

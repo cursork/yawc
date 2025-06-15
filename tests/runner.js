@@ -201,6 +201,9 @@ class TestRunner {
       case 'select':
         await this.browser.select(ID, Value)
         break
+      case 'input':
+        await this.browser.input(ID, Value)
+        break
       default:
         throw new Error(`Unknown user action: ${Action}`)
     }

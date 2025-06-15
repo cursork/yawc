@@ -5,6 +5,7 @@ import { Queue } from './queue'
 import type { Yawc, ComponentRegistry } from './types'
 import { Button } from './components/Button'
 import { Combo } from './components/Combo'
+import { Edit } from './components/Edit'
 import { Form } from './components/Form'
 import { SubForm } from './components/SubForm'
 import { Label } from './components/Label'
@@ -13,6 +14,7 @@ import { Label } from './components/Label'
 const componentRegistry: ComponentRegistry = {
   Button,
   Combo,
+  Edit,
   Form,
   SubForm,
   Label

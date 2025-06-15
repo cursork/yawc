@@ -5,6 +5,8 @@
 - Add more component types (Input, Textarea, Select, etc.)
 - Implement more event types beyond Select (KeyPress, Change, etc.)
 - Add visual regression testing for more complex layouts
+- null and undefined should always be returned as [] - this gets translated to 'nothing' on the APL side
+  - WG on missing Properties should return the property name and [] - we may want to toggle this though, based on whether we want to see the error on the APL or JS side
 
 ## Current Session Priority Items
 

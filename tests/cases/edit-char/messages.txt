@@ -1,0 +1,9 @@
+T: {"WC": {"ID": "F1", "Properties": {"Type": "Form"}}}
+T: {"WC": {"ID": "F1.E1", "Properties": {"Type": "Edit", "Posn": [50, 10], "Size": [20, 150], "FieldType": "Char", "Event": [["Change", ""]]}}}
+T: {"WS": {"ID": "F1.E1", "Properties": {"Text": "demo cookie"}}}
+U: {"Action": "input", "ID": "F1.E1", "Value": "updated text"}
+R: {"Event": {"EventName": "Change", "ID": "F1.E1"}}
+T: {"WG": {"ID": "F1.E1", "Properties": ["Text"]}}
+R: {"WG": {"ID": "F1.E1", "Properties": {"Text": "updated text"}}}
+T: {"WG": {"ID": "F1.E1", "Properties": ["Value"]}}
+R: {"WG": {"ID": "F1.E1", "Properties": {"Value": "updated text"}}}

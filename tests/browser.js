@@ -71,6 +71,17 @@ export class Browser {
       }
     }, { id: elementId, val: value })
   }
+  
+  async input(elementId, value) {
+    await this.page.evaluate(({ id, val }) => {
+      const element = document.getElementById(id)
+      if (element && element.tagName === 'INPUT') {
+        element.value = val
+        element.dispatchEvent(new Event('input', { bubbles: true }))
+        element.dispatchEvent(new Event('change', { bubbles: true }))
+      }
+    }, { id: elementId, val: value })
+  }
 
   async close() {
     if (this.browser) {

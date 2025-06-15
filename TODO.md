@@ -10,9 +10,8 @@
 
 ## Current Session Priority Items
 
-- Experiment with sharing code from legacy system to help building new components
-- Implement Edit component (HTML input) - requires architectural decision on whether to split it up on JS side or keep unified
-- Discuss global handlers/common approaches for events like click (43 components total needed for feature parity with existing system)
+- Make DemoCookie demo fully functional
+- Discuss global handlers/common approaches for events like click (43 components total needed for feature parity with existing system)  
 - WX messages - we use that for EvalJS
 
 ## System Improvements
@@ -28,6 +27,15 @@
 - Add tests for component destruction and cleanup
 
 ## Completed Items
+
+### 2025-06-15
+- ✅ Implemented Edit component with FieldType-based specialization architecture
+- ✅ Created Edit/Char.ts (Text-focused) and Edit/Numeric.ts (Value-focused) variants
+- ✅ Established inspiration-driven component development workflow
+- ✅ Added comprehensive test coverage for Edit component (both Char and Numeric)
+- ✅ Added input action support to test framework
+- ✅ Created COMPONENT-GUIDE.md with systematic implementation patterns
+- ✅ Documented Component Specialization Architecture in ADR 00002
 
 ### 2025-06-14
 - ✅ Implemented Combo Select event functionality with SelItems bitmask support

@@ -6,7 +6,7 @@
 - Implement more event types beyond Select (KeyPress, Change, etc.)
 - Add visual regression testing for more complex layouts
 
-## Next Session Priority Items
+## Current Session Priority Items
 
 - Experiment with sharing code from legacy system to help building new components
 - Implement Edit component (HTML input) - requires architectural decision on whether to split it up on JS side or keep unified
